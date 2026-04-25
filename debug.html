@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug iOS 13 Issue</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #log { background: #f0f0f0; padding: 10px; white-space: pre; font-family: monospace; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>iOS 13 Legacy Build Debug</h1>
+    <div id="log">Starting tests...</div>
+    
+    <script>
+        const log = document.getElementById('log');
+        
+        // Log function
+        function addLog(message, type = '') {
+            log.textContent += `[${new Date().toLocaleTimeString()}] ${type ? type + ': ' : ''}${message}\n`;
+        }
+        
+        // Test 1: Check if we're in legacy mode
+        addLog('Checking browser...');
+        addLog('User Agent: ' + navigator.userAgent);
+        addLog('Has __vite_is_modern_browser: ' + (window.__vite_is_modern_browser ? 'YES' : 'NO'));
+        
+        // Test 2: Check if System is defined (for legacy builds)
+        addLog('System defined: ' + (typeof System !== 'undefined' ? 'YES' : 'NO'));
+        
+        // Test 3: Check if Promise is available
+        addLog('Promise defined: ' + (typeof Promise !== 'undefined' ? 'YES' : 'NO'));
+        
+        // Test 4: Check if fetch is available
+        addLog('fetch defined: ' + (typeof fetch !== 'undefined' ? 'YES' : 'NO'));
+        
+        // Test 5: Check ES6 features
+        try {
+            const testObj = { a: 1 };
+            const spread = { ...testObj };
+            addLog('Spread operator: ✓ Supported', 'success');
+        } catch(e) {
+            addLog('Spread operator: ✗ Failed - ' + e.message, 'error');
+        }
+        
+        try {
+            const arrow = () => 'test';
+            addLog('Arrow functions: ✓ Supported', 'success');
+        } catch(e) {
+            addLog('Arrow functions: ✗ Failed - ' + e.message, 'error');
+        }
+        
+        try {
+            const template = `test ${1}`;
+            addLog('Template literals: ✓ Supported', 'success');
+        } catch(e) {
+            addLog('Template literals: ✗ Failed - ' + e.message, 'error');
+        }
+        
+        try {
+            const test = null ?? 'default';
+            addLog('Nullish coalescing: ✓ Supported', 'success');
+        } catch(e) {
+            addLog('Nullish coalescing: ✗ Failed - ' + e.message, 'error');
+        }
+        
+        try {
+            const obj = { a: { b: 1 } };
+            const value = obj?.a?.b;
+            addLog('Optional chaining: ✓ Supported', 'success');
+        } catch(e) {
+            addLog('Optional chaining: ✗ Failed - ' + e.message, 'error');
+        }
+        
+        // Test if the legacy polyfill script loaded
+        const legacyPolyfill = document.getElementById('vite-legacy-polyfill');
+        if (legacyPolyfill) {
+            addLog('Legacy polyfill element found in DOM', 'success');
+            legacyPolyfill.onload = function() {
+                addLog('Legacy polyfill loaded successfully', 'success');
+            };
+            legacyPolyfill.onerror = function() {
+                addLog('Legacy polyfill failed to load', 'error');
+            };
+        } else {
+            addLog('Legacy polyfill element NOT found in DOM', 'error');
+        }
+        
+        // Test if the legacy entry script loaded
+        const legacyEntry = document.getElementById('vite-legacy-entry');
+        if (legacyEntry) {
+            addLog('Legacy entry element found in DOM', 'success');
+            legacyEntry.onload = function() {
+                addLog('Legacy entry loaded successfully', 'success');
+            };
+            legacyEntry.onerror = function() {
+                addLog('Legacy entry failed to load', 'error');
+            };
+        } else {
+            addLog('Legacy entry element NOT found in DOM', 'error');
+        }
+        
+        // Add a simple script to test loading
+        addLog('\n--- SIMPLE SCRIPT LOAD TEST ---');
+        
+        const simpleScript = document.createElement('script');
+        simpleScript.textContent = `
+            console.log('Simple script running');
+            document.getElementById('log').textContent += '\\nSimple script executed successfully!';
+        `;
+        document.body.appendChild(simpleScript);
+        
+        // Add a script with ES6 features
+        const es6Script = document.createElement('script');
+        es6Script.textContent = `
+            try {
+                const test = () => 'ES6 arrow function';
+                console.log(test());
+                document.getElementById('log').textContent += '\\nES6 script executed successfully!';
+            } catch(e) {
+                console.error('ES6 script failed:', e);
+                document.getElementById('log').textContent += '\\nES6 script FAILED: ' + e.message;
+            }
+        `;
+        document.body.appendChild(es6Script);
+        
+        // Check for script errors
+        window.onerror = function(message, source, lineno, colno, error) {
+            addLog('Global error: ' + message + ' at ' + source + ':' + lineno, 'error');
+            return true;
+        };
+    </script>
+</body>
+</html>

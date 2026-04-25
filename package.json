@@ -1,0 +1,32 @@
+{
+  "name": "my-shop-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "core-js": "^3.40.0",
+    "marked": "^18.0.2",
+    "pocketbase": "^0.26.8",
+    "regenerator-runtime": "^0.14.1",
+    "tailwindcss": "^4.2.2",
+    "vue": "^3.5.30",
+    "vue-i18n": "^11.3.0",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^7.2.1",
+    "@vitejs/plugin-vue": "^6.0.4",
+    "vite": "^7.3.1",
+    "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-vue-devtools": "^8.0.7"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}

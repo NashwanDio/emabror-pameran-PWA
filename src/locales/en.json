@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Home",
+    "guestbook": "Guestbook",
+    "packages": "Packages",
+    "hotels": "Hotels",
+    "addons": "Add-ons",
+    "media": "Media Gallery",
+    "admin": "Admin",
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "home": {
+    "welcome": "Welcome to Our Booth!",
+    "subtitle": "Discover the best Umrah & Hajj packages and hotels for your sacred journey.",
+    "slogan": "Unforgettable Worship Experience",
+    "guestbook_btn": "Fill Guestbook",
+    "guestbook_desc": "Leave your mark for further information",
+    "packages_btn": "View Packages",
+    "packages_desc": "Complete package choices with various facilities",
+    "hotels_btn": "View Hotels",
+    "hotels_desc": "Premium accommodations near Haram & Nabawi Mosques",
+    "stats_customers": "Customers",
+    "stats_packages": "Available Packages",
+    "stats_hotels": "Partner Hotels",
+    "stats_satisfaction": "Customer Satisfaction"
+  },
+  "guestbook": {
+    "title": "Welcome!",
+    "subtitle": "Please sign in to our guestbook",
+    "fullname": "Full Name",
+    "phone": "Phone Number",
+    "origin": "Place of Origin",
+    "package": "Interested Package",
+    "select_package": "Select a package (Optional)",
+    "submit": "Submit Guestbook",
+    "submitting": "Submitting...",
+    "success": "Thank you! Your information has been saved.",
+    "error": "Something went wrong. Please try again."
+  },
+  "packages": {
+    "title": "Our Packages",
+    "subtitle": "Choose the best journey that fits your needs.",
+    "search_placeholder": "Search packages by name, duration, flight, or price...",
+    "search_results": "Showing {count} of {total} packages",
+    "no_results": "No packages found",
+    "no_results_hint": "Try adjusting your search or filter",
+    "starting_from": "Starting from",
+    "view_details": "View Details"
+  },
+  "hotels": {
+    "title": "Our Partnered Hotels",
+    "subtitle": "Premium accommodations close to the Haram.",
+    "search_placeholder": "Search hotels by name, location, or features...",
+    "filter_results": "Showing {count} of {total} hotels",
+    "all_locations": "All Locations",
+    "makkah": "Makkah",
+    "madinah": "Madinah",
+    "no_results": "No hotels found",
+    "no_results_hint": "Try adjusting your search or filter",
+    "view_map": "View on Map"
+  },
+  "package_detail": {
+    "loading": "Loading package details...",
+    "back_to_packages": "Back to Packages",
+    "back": "Back",
+    "package_id": "Package ID",
+    "starting_from": "Starting from",
+    "detailed_pricing": "Detailed Pricing",
+    "description": "Package Description",
+    "terms_conditions": "Terms & Conditions",
+    "book_now": "Book This Package"
+  },
+  "addons": {
+    "title": "Additional Services",
+    "subtitle": "Enhance your journey with our premium add-ons.",
+    "search_placeholder": "Search add-ons by title, category, or description...",
+    "filter_results": "Showing {count} of {total} add-ons",
+    "features": "Features",
+    "inquire_now": "Inquire Now",
+    "loading": "Loading add-ons...",
+    "no_results": "No add-ons found",
+    "no_results_hint": "Try adjusting your search or filter"
+  },
+  "media": {
+    "title": "Media Gallery",
+    "subtitle": "Explore moments from our pilgrims' journeys.",
+    "search_placeholder": "Search media by title, description, or category...",
+    "filter_results": "Showing {count} of {total} media items",
+    "loading": "Loading media gallery...",
+    "no_results": "No media items found",
+    "no_results_hint": "Try adjusting your search or filter"
+  }
+}

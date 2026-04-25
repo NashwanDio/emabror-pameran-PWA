@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+/* Custom theme colors */
+:root {
+  --primary-red: #ae3e41;
+  --primary-gold: #be8350;
+  --primary-gray: #383636;
+  --muted-text: #6b7280;
+  --light-bg: #f8f7f7;
+  --light-text: #2d2d2d;
+  --light-card: #ffffff;
+  --light-border: #e5e5e5;
+}
+
+/* Dark theme colors */
+[data-theme="dark"] {
+  --primary-red: #d87073;
+  --primary-gold: #d9a878;
+  --primary-gray: #4a4848;
+  --muted-text: #a0aec0;
+  --light-bg: #1a1a1a;
+  --light-text: #f0f0f0;
+  --light-card: #2d2d2d;
+  --light-border: #404040;
+}
+
+/* Apply custom colors to Tailwind */
+@theme {
+  --color-primary-red: var(--primary-red);
+  --color-primary-gold: var(--primary-gold);
+  --color-primary-gray: var(--primary-gray);
+  --color-muted-text: var(--muted-text);
+  --color-light-bg: var(--light-bg);
+  --color-light-text: var(--light-text);
+  --color-light-card: var(--light-card);
+  --color-light-border: var(--light-border);
+}
+
+/* Global styles */
+body {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

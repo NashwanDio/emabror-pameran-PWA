@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS 13.6 Test Page</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-result { 
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .success { border-color: green; background: #e8f5e8; }
+        .fail { border-color: red; background: #ffe8e8; }
+        .info { border-color: blue; background: #e8f5ff; }
+    </style>
+</head>
+<body>
+    <h1>iOS 13.6 Browser Compatibility Test</h1>
+    <p>Testing browser features on iOS 13.6</p>
+    
+    <div id="tests">
+        <div class="test-result info">
+            <h3>Browser Info</h3>
+            <div id="browser-info">Loading...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Module Support</h3>
+            <div id="module-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Feature: Arrow Functions</h3>
+            <div id="arrow-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Feature: const/let</h3>
+            <div id="const-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Feature: Template Literals</h3>
+            <div id="template-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Feature: Promise</h3>
+            <div id="promise-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Feature: async/await</h3>
+            <div id="async-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Feature: Optional Chaining</h3>
+            <div id="optional-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>ES6 Feature: Nullish Coalescing</h3>
+            <div id="nullish-test">Testing...</div>
+        </div>
+        
+        <div class="test-result">
+            <h3>Vue 3 Compatibility</h3>
+            <div id="vue-test">Testing...</div>
+        </div>
+    </div>
+    
+    <script>
+        // Browser info
+        document.getElementById('browser-info').innerHTML = `
+            User Agent: ${navigator.userAgent}<br>
+            Platform: ${navigator.platform}<br>
+            Language: ${navigator.language}
+        `;
+        
+        // Test 1: ES6 Modules
+        try {
+            eval('import("data:text/javascript,console.log(\"module test\")")');
+            document.getElementById('module-test').innerHTML = '<span style="color:green">✓ Supported</span>';
+            document.getElementById('module-test').parentElement.className += ' success';
+        } catch(e) {
+            document.getElementById('module-test').innerHTML = '<span style="color:red">✗ NOT Supported: ' + e.message + '</span>';
+            document.getElementById('module-test').parentElement.className += ' fail';
+        }
+        
+        // Test 2: Arrow Functions
+        try {
+            const arrowFunc = () => 'test';
+            document.getElementById('arrow-test').innerHTML = '<span style="color:green">✓ Supported: ' + arrowFunc() + '</span>';
+            document.getElementById('arrow-test').parentElement.className += ' success';
+        } catch(e) {
+            document.getElementById('arrow-test').innerHTML = '<span style="color:red">✗ NOT Supported</span>';
+            document.getElementById('arrow-test').parentElement.className += ' fail';
+        }
+        
+        // Test 3: const/let
+        try {
+            const constTest = 'const works';
+            let letTest = 'let works';
+            document.getElementById('const-test').innerHTML = '<span style="color:green">✓ ' + constTest + ', ' + letTest + '</span>';
+            document.getElementById('const-test').parentElement.className += ' success';
+        } catch(e) {
+            document.getElementById('const-test').innerHTML = '<span style="color:red">✗ NOT Supported</span>';
+            document.getElementById('const-test').parentElement.className += ' fail';
+        }
+        
+        // Test 4: Template Literals
+        try {
+            const name = 'iOS';
+            const template = `Hello ${name}!`;
+            document.getElementById('template-test').innerHTML = '<span style="color:red">✗ NOT Supported</span>';
+            document.getElementById('const-test').parentElement.className += ' fail';
+        }
+        
+        // Test 4: Template Literals
+        try {
+            const name = 'iOS';
+            const message = `Hello ${name}!`;
+            document.getElementById('template-test').innerHTML = '<span style="color:green">✓ ' + message + '</span>';
+            document.getElementById('template-test').parentElement.className += ' success';
+        } catch(e) {
+            document.getElementById('template-test').innerHTML = '<span style="color:red">✗ NOT Supported</span>';
+            document.getElementById('template-test').parentElement.className += ' fail';
+        }
+        
+        // Test 5: Promise
+        try {
+            const promise = new Promise(resolve => resolve('Promise works'));
+            promise.then(result => {
+                document.getElementById('promise-test').innerHTML = '<span style="color:green">✓ ' + result + '</span>';
+                document.getElementById('promise-test').parentElement.className += ' success';
+            }).catch(() => {
+                document.getElementById('promise-test').innerHTML = '<span style="color:red">✗ Promise failed</span>';
+                document.getElementById('promise-test').parentElement.className += ' fail';
+            });
+        } catch(e) {
+            document.getElementById('promise-test').innerHTML = '<span style="color:red">✗ NOT Supported: ' + e.message + '</span>';
+            document.getElementById('promise-test').parentElement.className += ' fail';
+        }
+        
+        // Test 6: async/await
+        try {
+            eval(`
+                async function testAsync() {
+                    return 'async works';
+                }
+                testAsync().then(result => {
+                    document.getElementById('async-test').innerHTML = '<span style="color:green">✓ ' + result + '</span>';
+                    document.getElementById('async-test').parentElement.className += ' success';
+                });
+            `);
+        } catch(e) {
+            document.getElementById('async-test').innerHTML = '<span style="color:red">✗ NOT Supported: ' + e.message + '</span>';
+            document.getElementById('async-test').parentElement.className += ' fail';
+        }
+        
+        // Test 7: Optional Chaining
+        try {
+            const obj = { nested: { value: 'optional chaining works' } };
+            const value = obj?.nested?.value;
+            document.getElementById('optional-test').innerHTML = '<span style="color:green">✓ ' + value + '</span>';
+            document.getElementById('optional-test').parentElement.className += ' success';
+        } catch(e) {
+            document.getElementById('optional-test').innerHTML = '<span style="color:red">✗ NOT Supported: ' + e.message + '</span>';
+            document.getElementById('optional-test').parentElement.className += ' fail';
+        }
+        
+        // Test 8: Nullish Coalescing
+        try {
+            const test = null ?? 'nullish coalescing works';
+            document.getElementById('nullish-test').innerHTML = '<span style="color:green">✓ ' + test + '</span>';
+            document.getElementById('nullish-test').parentElement.className += ' success';
+        } catch(e) {
+            document.getElementById('nullish-test').innerHTML = '<span style="color:red">✗ NOT Supported: ' + e.message + '</span>';
+            document.getElementById('nullish-test').parentElement.className += ' fail';
+        }
+        
+        // Test 9: Vue 3
+        try {
+            // Check if Vue 3's composition API features would work
+            if (typeof Proxy !== 'undefined' && typeof Reflect !== 'undefined') {
+                document.getElementById('vue-test').innerHTML = '<span style="color:green">✓ Vue 3 core features supported</span>';
+                document.getElementById('vue-test').parentElement.className += ' success';
+            } else {
+                document.getElementById('vue-test').innerHTML = '<span style="color:red">✗ Vue 3 requires Proxy and Reflect</span>';
+                document.getElementById('vue-test').parentElement.className += ' fail';
+            }
+        } catch(e) {
+            document.getElementById('vue-test').innerHTML = '<span style="color:red">✗ Vue compatibility test failed</span>';
+            document.getElementById('vue-test').parentElement.className += ' fail';
+        }
+    </script>
+</body>
+</html>

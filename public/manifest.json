@@ -1,0 +1,25 @@
+{
+  "name": "Em Abror App",
+  "short_name": "Em Abror",
+  "description": "Premium Umrah & Hajj Packages and Hotel Bookings",
+  "theme_color": "#ae3e41",
+  "background_color": "#f8f7f7",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/logos/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logos/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

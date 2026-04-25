@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "guestbook": "Buku Tamu",
+    "packages": "Paket",
+    "hotels": "Hotel",
+    "addons": "Layanan Tambahan",
+    "media": "Galeri Media",
+    "admin": "Admin",
+    "dark": "Gelap",
+    "light": "Terang"
+  },
+  "home": {
+    "welcome": "Selamat Datang di Booth Kami!",
+    "subtitle": "Temukan paket Umrah & Haji serta hotel terbaik untuk perjalanan suci Anda.",
+    "slogan": "Pengalaman Ibadah yang Tak Terlupakan",
+    "guestbook_btn": "Isi Buku Tamu",
+    "guestbook_desc": "Tinggalkan jejak Anda untuk informasi lebih lanjut",
+    "packages_btn": "Lihat Paket",
+    "packages_desc": "Pilihan paket lengkap dengan berbagai fasilitas",
+    "hotels_btn": "Lihat Hotel",
+    "hotels_desc": "Akomodasi premium dekat Masjidil Haram & Nabawi",
+    "stats_customers": "Pelanggan",
+    "stats_packages": "Paket Tersedia",
+    "stats_hotels": "Hotel Partner",
+    "stats_satisfaction": "Kepuasan Pelanggan"
+  },
+  "guestbook": {
+    "title": "Selamat Datang!",
+    "subtitle": "Silakan isi buku tamu kami",
+    "fullname": "Nama Lengkap",
+    "phone": "Nomor Telepon/WA",
+    "origin": "Asal/Daerah",
+    "package": "Paket yang Diminati",
+    "select_package": "Pilih paket (Opsional)",
+    "submit": "Simpan Data",
+    "submitting": "Menyimpan...",
+    "success": "Terima kasih! Data Anda telah berhasil disimpan.",
+    "error": "Terjadi kesalahan. Silakan coba lagi."
+  },
+  "packages": {
+    "title": "Paket Kami",
+    "subtitle": "Pilih perjalanan terbaik yang sesuai dengan kebutuhan Anda.",
+    "search_placeholder": "Cari paket berdasarkan nama, durasi, penerbangan, atau harga...",
+    "search_results": "Menampilkan {count} dari {total} paket",
+    "no_results": "Paket tidak ditemukan",
+    "no_results_hint": "Coba sesuaikan pencarian atau filter",
+    "starting_from": "Mulai dari",
+    "view_details": "Lihat Detail"
+  },
+  "hotels": {
+    "title": "Hotel Rekanan Kami",
+    "subtitle": "Akomodasi premium yang dekat dengan Masjidil Haram & Nabawi.",
+    "search_placeholder": "Cari hotel berdasarkan nama, lokasi, atau fasilitas...",
+    "filter_results": "Menampilkan {count} dari {total} hotel",
+    "all_locations": "Semua Lokasi",
+    "makkah": "Makkah",
+    "madinah": "Madinah",
+    "no_results": "Hotel tidak ditemukan",
+    "no_results_hint": "Coba sesuaikan pencarian atau filter",
+    "view_map": "Lihat di Peta"
+  },
+  "package_detail": {
+    "loading": "Memuat detail paket...",
+    "back_to_packages": "Kembali ke Paket",
+    "back": "Kembali",
+    "package_id": "ID Paket",
+    "starting_from": "Mulai dari",
+    "detailed_pricing": "Rincian Harga",
+    "description": "Deskripsi Paket",
+    "terms_conditions": "Syarat & Ketentuan",
+    "book_now": "Pesan Paket Ini"
+  },
+  "addons": {
+    "title": "Layanan Tambahan",
+    "subtitle": "Tingkatkan perjalanan Anda dengan layanan tambahan premium.",
+    "search_placeholder": "Cari layanan tambahan berdasarkan judul, kategori, atau deskripsi...",
+    "filter_results": "Menampilkan {count} dari {total} layanan tambahan",
+    "features": "Fitur",
+    "inquire_now": "Tanyakan Sekarang",
+    "loading": "Memuat layanan tambahan...",
+    "no_results": "Layanan tambahan tidak ditemukan",
+    "no_results_hint": "Coba sesuaikan pencarian atau filter"
+  },
+  "media": {
+    "title": "Galeri Media",
+    "subtitle": "Jelajahi momen-momen dari perjalanan jamaah kami.",
+    "search_placeholder": "Cari media berdasarkan judul, deskripsi, atau kategori...",
+    "filter_results": "Menampilkan {count} dari {total} item media",
+    "loading": "Memuat galeri media...",
+    "no_results": "Item media tidak ditemukan",
+    "no_results_hint": "Coba sesuaikan pencarian atau filter"
+  }
+}
