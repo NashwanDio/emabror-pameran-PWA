@@ -23,7 +23,7 @@ const newPackage = ref({ name: '', duration: '', price: '', flight: '', image: '
 const newHotel = ref({ name: '', location: '', distance: '', rating: '3', description: '', image: '', images: '', mapUrl: '' })
 const newAddon = ref({ title: '', category: '', description: '', images: '', icon: '', price: '', features: '' })
 const newMedia = ref({ title: '', description: '', image_url: '', thumbnail_url: '', category: '', type: '', date: '' })
-const newTerms = ref({ title: '', description: '', notes: '', image: null })
+const newTerms = ref({ title: '', description: '', notes: '', image: '' })
 
 // Edit states
 const editingPackage = ref(null)
@@ -239,18 +239,14 @@ const deleteMedia = async (id) => {
 // 7. Add/Edit/Delete Terms & Conditions
 const addTerms = async () => {
   try {
-    const formData = new FormData()
-    formData.append('title', newTerms.value.title || '')
-    formData.append('description', newTerms.value.description || '')
-    formData.append('notes', newTerms.value.notes || '')
-    
-    if (newTerms.value.image) {
-      formData.append('image', newTerms.value.image)
-    }
-    
-    await pb.collection('terms_conditions').create(formData)
+    await pb.collection('terms_conditions').create({
+      title: newTerms.value.title || '',
+      description: newTerms.value.description || '',
+      notes: newTerms.value.notes || '',
+      image: newTerms.value.image || ''
+    })
     fetchTerms()
-    newTerms.value = { title: '', description: '', notes: '', image: null }
+    newTerms.value = { title: '', description: '', notes: '', image: '' }
   } catch (e) { console.error(e) }
 }
 
@@ -260,16 +256,12 @@ const editTerms = (term) => {
 
 const updateTerms = async () => {
   try {
-    const formData = new FormData()
-    formData.append('title', editingTerms.value.title || '')
-    formData.append('description', editingTerms.value.description || '')
-    formData.append('notes', editingTerms.value.notes || '')
-    
-    if (editingTerms.value.image instanceof File) {
-      formData.append('image', editingTerms.value.image)
-    }
-    
-    await pb.collection('terms_conditions').update(editingTerms.value.id, formData)
+    await pb.collection('terms_conditions').update(editingTerms.value.id, {
+      title: editingTerms.value.title || '',
+      description: editingTerms.value.description || '',
+      notes: editingTerms.value.notes || '',
+      image: editingTerms.value.image || ''
+    })
     fetchTerms()
     editingTerms.value = null
   } catch (e) { console.error(e) }
@@ -288,29 +280,7 @@ const deleteTerms = async (id) => {
   }
 }
 
-const handleTermsImageUpload = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    // Check file type
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'application/pdf']
-    if (!validTypes.includes(file.type)) {
-      alert('Please upload a JPG, PNG, WEBP, or PDF file (A4 size recommended)')
-      return
-    }
-    
-    // Check file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB')
-      return
-    }
-    
-    if (editingTerms.value) {
-      editingTerms.value.image = file
-    } else {
-      newTerms.value.image = file
-    }
-  }
-}
+
 
 const deleteAllMedia = async () => {
   if(confirm("Are you sure you want to delete ALL media items? This cannot be undone!")) {
@@ -874,16 +844,20 @@ onMounted(() => {
                </button>
              </div>
            </div>
-           <form @submit.prevent="addMedia" class="grid grid-cols-2 gap-4">
-             <input v-model="newMedia.title" type="text" placeholder="Title" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
-             <input v-model="newMedia.category" type="text" placeholder="Category (optional)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
-             <textarea v-model="newMedia.description" placeholder="Description" rows="2" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
-             <input v-model="newMedia.image_url" type="text" placeholder="Image URL" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
-             <input v-model="newMedia.thumbnail_url" type="text" placeholder="Thumbnail URL (optional)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
-             <input v-model="newMedia.type" type="text" placeholder="Type (photo, video, etc.)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
-             <input v-model="newMedia.date" type="date" placeholder="Date" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
-             <button type="submit" class="col-span-2 bg-primary-red hover:bg-primary-red/90 text-white py-3 rounded-lg font-bold mt-2 transition-colors duration-200">Save Media</button>
-           </form>
+            <form @submit.prevent="addMedia" class="grid grid-cols-2 gap-4">
+              <input v-model="newMedia.title" type="text" placeholder="Title" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
+              <input v-model="newMedia.category" type="text" placeholder="Category (optional)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
+              <textarea v-model="newMedia.description" placeholder="Description" rows="2" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
+              <input v-model="newMedia.image_url" type="text" placeholder="Image URL" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
+              <input v-model="newMedia.thumbnail_url" type="text" placeholder="Thumbnail URL (optional)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
+              <select v-model="newMedia.type" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required>
+                <option value="">Select Type</option>
+                <option value="image">Image</option>
+                <option value="video">Video</option>
+              </select>
+              <input v-model="newMedia.date" type="date" placeholder="Date" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
+              <button type="submit" class="col-span-2 bg-primary-red hover:bg-primary-red/90 text-white py-3 rounded-lg font-bold mt-2 transition-colors duration-200">Save Media</button>
+            </form>
          </div>
         
         <!-- Media List -->
@@ -921,7 +895,11 @@ onMounted(() => {
               <textarea v-model="editingMedia.description" placeholder="Description" rows="2" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
               <input v-model="editingMedia.image_url" type="text" placeholder="Image URL" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
               <input v-model="editingMedia.thumbnail_url" type="text" placeholder="Thumbnail URL" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
-              <input v-model="editingMedia.type" type="text" placeholder="Type" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
+              <select v-model="editingMedia.type" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required>
+                <option value="">Select Type</option>
+                <option value="image">Image</option>
+                <option value="video">Video</option>
+              </select>
               <input v-model="editingMedia.date" type="date" placeholder="Date" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
               <div class="col-span-2 flex gap-2">
                 <button type="submit" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold transition-colors duration-200">Update Media</button>
@@ -943,21 +921,9 @@ onMounted(() => {
               <textarea v-model="newTerms.description" placeholder="Brief Description (optional)" rows="2" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
               <textarea v-model="newTerms.notes" placeholder="Internal Notes (optional)" rows="2" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
               
-              <!-- File Upload -->
-              <div class="border-2 border-dashed border-light-border rounded-lg p-6 text-center">
-                <input type="file" @change="handleTermsImageUpload" accept=".jpg,.jpeg,.png,.webp,.pdf" class="hidden" id="termsFileInput" />
-                <label for="termsFileInput" class="cursor-pointer">
-                  <div class="text-4xl mb-3">📄</div>
-                  <p class="font-bold text-light-text mb-1">
-                    {{ newTerms.image ? 'File selected: ' + newTerms.image.name : 'Click to upload document' }}
-                  </p>
-                  <p class="text-sm text-muted-text">
-                    Upload JPG, PNG, WEBP, or PDF (Max 5MB, A4 size recommended)
-                  </p>
-                </label>
-              </div>
+              <input v-model="newTerms.image" type="text" placeholder="Document URL (link to PDF or image file)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
               
-              <button type="submit" class="bg-primary-red hover:bg-primary-red/90 text-white py-3 rounded-lg font-bold transition-colors duration-200">Upload Terms Document</button>
+              <button type="submit" class="bg-primary-red hover:bg-primary-red/90 text-white py-3 rounded-lg font-bold transition-colors duration-200">Save Terms Document</button>
             </form>
           </div>
          
@@ -976,7 +942,7 @@ onMounted(() => {
                <tr v-for="term in terms" :key="term.id" class="border-b border-light-border hover:bg-light-bg">
                  <td class="p-4 font-semibold text-light-text">{{ term.title || 'Untitled Document' }}</td>
                  <td class="p-4 text-muted-text">{{ new Date(term.created).toLocaleDateString() }}</td>
-                 <td class="p-4 text-muted-text">{{ term.image.split('.').pop().toUpperCase() }}</td>
+                  <td class="p-4 text-muted-text">{{ term.image ? term.image.split('.').pop().toUpperCase() : '-' }}</td>
                  <td class="p-4 space-x-2">
                    <button @click="editTerms(term)" class="bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold hover:bg-blue-200 transition-colors duration-200">Edit</button>
                    <button @click="deleteTerms(term.id)" class="bg-red-100 text-red-600 px-3 py-1 rounded font-bold hover:bg-red-200 transition-colors duration-200">Delete</button>
@@ -995,19 +961,7 @@ onMounted(() => {
               <textarea v-model="editingTerms.description" placeholder="Brief Description" rows="2" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
               <textarea v-model="editingTerms.notes" placeholder="Internal Notes" rows="2" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
               
-              <!-- File Upload for Edit -->
-              <div class="border-2 border-dashed border-light-border rounded-lg p-6 text-center">
-                <input type="file" @change="handleTermsImageUpload" accept=".jpg,.jpeg,.png,.webp,.pdf" class="hidden" id="editTermsFileInput" />
-                <label for="editTermsFileInput" class="cursor-pointer">
-                  <div class="text-4xl mb-3">📄</div>
-                  <p class="font-bold text-light-text mb-1">
-                    {{ editingTerms.image instanceof File ? 'New file selected: ' + editingTerms.image.name : 'Current: ' + editingTerms.image.split('/').pop() }}
-                  </p>
-                  <p class="text-sm text-muted-text">
-                    Click to replace current file (JPG, PNG, WEBP, or PDF, Max 5MB)
-                  </p>
-                </label>
-              </div>
+              <input v-model="editingTerms.image" type="text" placeholder="Document URL (link to PDF or image file)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
               
               <div class="flex gap-2">
                 <button type="submit" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold transition-colors duration-200">Update Document</button>
