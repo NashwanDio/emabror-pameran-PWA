@@ -5,18 +5,25 @@ import { pb } from '../lib/pocketbase'
 const loading = ref(true)
 const error = ref(null)
 const termsImage = ref(null)
+const showLightbox = ref(false)
+
+const openLightbox = () => {
+  showLightbox.value = true
+}
+
+const closeLightbox = () => {
+  showLightbox.value = false
+}
 
 const fetchTerms = async () => {
   try {
     loading.value = true
-    // Get the latest terms image
-    const records = await pb.collection('terms_conditions').getList(1, 1, {
-      sort: '-created',
-      expand: 'image'
-    })
+    // Get the latest terms document (by ID or just first)
+    const records = await pb.collection('terms_conditions').getFullList()
     
-    if (records.items.length > 0) {
-      termsImage.value = records.items[0]
+    // Use the first record (or you could sort by something else)
+    if (records.length > 0) {
+      termsImage.value = records[0]
     } else {
       termsImage.value = null
     }
@@ -29,9 +36,9 @@ const fetchTerms = async () => {
 }
 
 const getImageUrl = (record) => {
-  if (!record || !record.image) return null
-  // Get the full URL for the image
-  return pb.files.getUrl(record, record.image)
+  if (!record || !record.image || typeof record.image !== 'string') return ''
+  // image is now a URL string (not a file)
+  return record.image.trim()
 }
 
 onMounted(() => fetchTerms())
@@ -74,9 +81,9 @@ onMounted(() => fetchTerms())
           <div>
             <h2 class="text-xl font-bold text-light-text">{{ termsImage.title || 'Terms & Conditions' }}</h2>
             <p v-if="termsImage.description" class="text-muted-text mt-1">{{ termsImage.description }}</p>
-            <p class="text-sm text-muted-text mt-2">
-              Last updated: {{ new Date(termsImage.created).toLocaleDateString() }}
-            </p>
+<p class="text-sm text-muted-text mt-2">
+               Terms & Conditions Document
+             </p>
           </div>
           <a 
             :href="getImageUrl(termsImage)" 
@@ -94,13 +101,21 @@ onMounted(() => fetchTerms())
       <!-- Image Display Area -->
       <div class="p-8">
         <div class="max-w-4xl mx-auto">
-          <div class="bg-light-bg border border-light-border rounded-2xl p-8 flex items-center justify-center min-h-[800px]">
-            <img 
-              :src="getImageUrl(termsImage)" 
-              :alt="termsImage.title || 'Terms and Conditions'"
-              class="max-w-full max-h-[700px] object-contain shadow-lg rounded-lg"
-              loading="lazy"
-            />
+              <div class="bg-light-bg border border-light-border rounded-2xl p-8 flex items-center justify-center min-h-[800px]">
+<img 
+                :src="getImageUrl(termsImage)" 
+                :alt="termsImage.title || 'Terms and Conditions'"
+                class="max-w-full max-h-[700px] object-contain shadow-lg rounded-lg cursor-pointer"
+                loading="lazy"
+                v-if="getImageUrl(termsImage)"
+                @error="(e) => e.target.style.display = 'none'"
+                @click="openLightbox"
+              />
+             <div v-else class="text-center text-muted-text">
+               <div class="text-6xl mb-4">📄</div>
+               <p>Unable to load document from URL</p>
+               <p class="text-sm mt-2">{{ termsImage.image }}</p>
+             </div>
           </div>
           
           <!-- Image Info -->
@@ -111,24 +126,53 @@ onMounted(() => fetchTerms())
                 <p class="text-sm text-muted-text mb-1">Document Title</p>
                 <p class="font-medium text-light-text">{{ termsImage.title || 'Not specified' }}</p>
               </div>
-              <div>
-                <p class="text-sm text-muted-text mb-1">Upload Date</p>
-                <p class="font-medium text-light-text">{{ new Date(termsImage.created).toLocaleDateString() }}</p>
-              </div>
+<div>
+                 <p class="text-sm text-muted-text mb-1">Source</p>
+                 <p class="font-medium text-light-text">URL Document</p>
+               </div>
               <div>
                 <p class="text-sm text-muted-text mb-1">Document Type</p>
                 <p class="font-medium text-light-text">Terms & Conditions</p>
               </div>
-              <div>
-                <p class="text-sm text-muted-text mb-1">File Format</p>
-                <p class="font-medium text-light-text">{{ termsImage.image.split('.').pop().toUpperCase() }}</p>
-              </div>
+<div>
+                 <p class="text-sm text-muted-text mb-1">File Format</p>
+                 <p class="font-medium text-light-text">{{ termsImage.image ? termsImage.image.split('.').pop().toUpperCase() : 'Unknown' }}</p>
+               </div>
             </div>
             
             <div class="mt-6" v-if="termsImage.notes">
               <p class="text-sm text-muted-text mb-2">Additional Notes</p>
               <p class="text-light-text bg-light-card p-4 rounded-lg">{{ termsImage.notes }}</p>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div
+      v-if="showLightbox"
+      @click.self="closeLightbox"
+      class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+    >
+      <div class="relative max-w-6xl max-h-[95vh] w-full">
+        <button
+          @click="closeLightbox"
+          class="absolute -top-12 right-0 text-white hover:text-primary-red transition-colors duration-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div class="bg-light-card rounded-2xl overflow-hidden">
+          <img
+            :src="getImageUrl(termsImage)"
+            :alt="termsImage?.title || 'Terms and Conditions'"
+            class="w-full max-h-[85vh] object-contain bg-primary-gray/10"
+          />
+          <div class="p-4 text-center text-muted-text text-sm border-t border-light-border">
+            {{ termsImage?.title || 'Terms & Conditions' }}
           </div>
         </div>
       </div>

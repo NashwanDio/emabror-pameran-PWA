@@ -76,7 +76,7 @@ const fetchMedia = async () => {
 }
 
 const fetchTerms = async () => {
-  try { terms.value = await pb.collection('terms_conditions').getFullList({ sort: '-created' }) } catch (e) { console.error(e) }
+  try { terms.value = await pb.collection('terms_conditions').getFullList() } catch (e) { console.error(e) }
 }
 
 // 5. Customer management
@@ -933,7 +933,7 @@ onMounted(() => {
              <thead class="bg-light-bg border-b border-light-border">
                <tr>
                  <th class="p-4 font-bold text-light-text">Title</th>
-                 <th class="p-4 font-bold text-light-text">Upload Date</th>
+                 <th class="p-4 font-bold text-light-text">Type</th>
                  <th class="p-4 font-bold text-light-text">File Type</th>
                  <th class="p-4 font-bold text-light-text">Actions</th>
                </tr>
@@ -941,7 +941,7 @@ onMounted(() => {
              <tbody>
                <tr v-for="term in terms" :key="term.id" class="border-b border-light-border hover:bg-light-bg">
                  <td class="p-4 font-semibold text-light-text">{{ term.title || 'Untitled Document' }}</td>
-                 <td class="p-4 text-muted-text">{{ new Date(term.created).toLocaleDateString() }}</td>
+                 <td class="p-4 text-muted-text">Document</td>
                   <td class="p-4 text-muted-text">{{ term.image ? term.image.split('.').pop().toUpperCase() : '-' }}</td>
                  <td class="p-4 space-x-2">
                    <button @click="editTerms(term)" class="bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold hover:bg-blue-200 transition-colors duration-200">Edit</button>
