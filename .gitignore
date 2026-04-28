@@ -34,4 +34,4 @@ pb_migrations/
 pocketbase
 pocketbase.exe
 pocketbase.pid
-*.db
+*.dbpb_data/
