@@ -5,7 +5,8 @@ import { pb } from '../lib/pocketbase'
 const mediaItems = ref([])
 const loading = ref(true)
 const searchQuery = ref('')
-const selectedImage = ref(null)
+const selectedTab = ref('images') // 'images', 'videos'
+const selectedMedia = ref(null)
 
 const fetchMedia = async () => {
   try {
@@ -19,25 +20,42 @@ const fetchMedia = async () => {
   }
 }
 
+const images = computed(() => {
+  return mediaItems.value.filter(item => 
+    item.type?.toLowerCase() === 'image' || 
+    (!item.type && item.image_url?.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+  )
+})
+
+const videos = computed(() => {
+  return mediaItems.value.filter(item => 
+    item.type?.toLowerCase() === 'video' || 
+    item.video_url || 
+    item.image_url?.match(/\.(mp4|webm|ogg)$/i)
+  )
+})
+
 const filteredMedia = computed(() => {
+  const items = selectedTab.value === 'images' ? images.value : videos.value
+  
   // Filter by search query only
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    return mediaItems.value.filter(item => 
+    return items.filter(item => 
       item.title.toLowerCase().includes(query) ||
       (item.description && item.description.toLowerCase().includes(query))
     )
   }
   
-  return mediaItems.value
+  return items
 })
 
 const openLightbox = (item) => {
-  selectedImage.value = item
+  selectedMedia.value = item
 }
 
 const closeLightbox = () => {
-  selectedImage.value = null
+  selectedMedia.value = null
 }
 
 onMounted(() => fetchMedia())
@@ -51,7 +69,7 @@ onMounted(() => fetchMedia())
     </div>
 
     <!-- Search Bar -->
-    <div class="max-w-2xl mx-auto mb-12">
+    <div class="max-w-2xl mx-auto mb-8">
       <div class="relative">
         <input
           v-model="searchQuery"
@@ -66,7 +84,27 @@ onMounted(() => fetchMedia())
         </div>
       </div>
       <div v-if="searchQuery" class="mt-2 text-sm text-muted-text">
-        {{ $t('media.filter_results', { count: filteredMedia.length, total: mediaItems.length }) }}
+        {{ $t('media.filter_results', { count: filteredMedia.length, total: selectedTab.value === 'images' ? images.length : videos.length }) }}
+      </div>
+    </div>
+
+    <!-- Tab Selector -->
+    <div class="flex justify-center mb-8">
+      <div class="inline-flex bg-light-card border border-light-border rounded-2xl p-1">
+        <button
+          @click="selectedTab = 'images'"
+          :class="selectedTab === 'images' ? 'bg-primary-red text-white' : 'text-light-text hover:bg-light-border'"
+          class="px-8 py-3 rounded-xl font-bold transition-colors duration-200"
+        >
+          Images ({{ images.length }})
+        </button>
+        <button
+          @click="selectedTab = 'videos'"
+          :class="selectedTab === 'videos' ? 'bg-primary-red text-white' : 'text-light-text hover:bg-light-border'"
+          class="px-8 py-3 rounded-xl font-bold transition-colors duration-200"
+        >
+          Videos ({{ videos.length }})
+        </button>
       </div>
     </div>
 
@@ -92,9 +130,18 @@ onMounted(() => fetchMedia())
         class="group cursor-pointer"
       >
         <div class="bg-light-card rounded-2xl overflow-hidden shadow-lg border border-light-border hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2">
-          <!-- Thumbnail Image -->
+          <!-- Thumbnail -->
           <div class="h-56 bg-primary-gray/10 relative overflow-hidden">
+            <!-- Video Indicator -->
+            <div v-if="selectedTab === 'videos'" class="absolute inset-0 flex items-center justify-center bg-black/30">
+              <div class="bg-primary-red/90 rounded-full p-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
             <img 
+              v-else
               :src="item.thumbnail_url || item.image_url" 
               :alt="item.title"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -130,11 +177,12 @@ onMounted(() => fetchMedia())
 
     <!-- Lightbox Modal -->
     <div 
-      v-if="selectedImage"
+      v-if="selectedMedia"
       @click.self="closeLightbox"
       class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
     >
       <div class="relative max-w-4xl max-h-[90vh] w-full">
+        <!-- Close Button -->
         <button
           @click="closeLightbox"
           class="absolute -top-12 right-0 text-white hover:text-primary-red transition-colors duration-200"
@@ -145,20 +193,34 @@ onMounted(() => fetchMedia())
         </button>
         
         <div class="bg-light-card rounded-2xl overflow-hidden">
-          <img 
-            :src="selectedImage.image_url" 
-            :alt="selectedImage.title"
-            class="w-full max-h-[70vh] object-contain bg-primary-gray/10"
-          />
-          
+          <!-- Media Content -->
+          <div class="relative">
+            <!-- Image -->
+            <img 
+              v-if="selectedTab === 'images' && selectedMedia.image_url"
+              :src="selectedMedia.image_url" 
+              :alt="selectedMedia.title"
+              class="w-full max-h-[70vh] object-contain bg-primary-gray/10"
+            />
+            <!-- Video -->
+            <video
+              v-else-if="selectedTab === 'videos' && selectedMedia.video_url || selectedMedia.image_url?.match(/\.(mp4|webm|ogg)$/i)"
+              :src="selectedMedia.video_url || selectedMedia.image_url"
+              controls
+              autoplay
+              class="w-full max-h-[70vh] object-contain bg-primary-gray/10"
+            ></video>
+          </div>
+
+          <!-- Media Info -->
           <div class="p-6">
-            <h2 class="text-2xl font-black text-light-text mb-2">{{ selectedImage.title }}</h2>
-            <div v-if="selectedImage.category" class="inline-block px-3 py-1 bg-primary-red/10 text-primary-red font-bold rounded-full text-sm mb-3">
-              {{ selectedImage.category }}
+            <h2 class="text-2xl font-black text-light-text mb-2">{{ selectedMedia.title }}</h2>
+            <div v-if="selectedMedia.category" class="inline-block px-3 py-1 bg-primary-red/10 text-primary-red font-bold rounded-full text-sm mb-3">
+              {{ selectedMedia.category }}
             </div>
-            <p v-if="selectedImage.description" class="text-light-text mb-4">{{ selectedImage.description }}</p>
-            <div v-if="selectedImage.date" class="text-sm text-muted-text">
-              {{ new Date(selectedImage.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}
+            <p v-if="selectedMedia.description" class="text-light-text mb-4">{{ selectedMedia.description }}</p>
+            <div v-if="selectedMedia.date" class="text-sm text-muted-text">
+              {{ new Date(selectedMedia.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}
             </div>
           </div>
         </div>

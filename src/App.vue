@@ -98,7 +98,7 @@ onMounted(() => {
                 </div>
                 <div>
                   <div class="font-bold text-light-text">Rio (WhatsApp)</div>
-                  <a href="https://wa.me/628133006546" target="_blank" class="text-muted-text hover:text-green-500 transition-colors duration-200">
+                  <a href="https://wa.me/6281333006546" target="_blank" class="text-muted-text hover:text-green-500 transition-colors duration-200">
                     0813 3300 6546
                   </a>
                   <div class="text-sm text-muted-text mt-1">Click to chat on WhatsApp</div>
