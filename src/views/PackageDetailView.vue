@@ -10,6 +10,8 @@ const packageData = ref(null)
 const loading = ref(true)
 const error = ref(null)
 const selectedImageIndex = ref(0)
+const showLightbox = ref(false)
+const lightboxImageIndex = ref(0)
 
 // Parse images string to array
 const imagesArray = computed(() => {
@@ -45,6 +47,28 @@ const nextImage = () => {
 const prevImage = () => {
   if (displayImages.value.length > 0) {
     selectedImageIndex.value = (selectedImageIndex.value - 1 + displayImages.value.length) % displayImages.value.length
+  }
+}
+
+const openLightbox = (index) => {
+  lightboxImageIndex.value = index
+  showLightbox.value = true
+}
+
+const closeLightbox = () => {
+  showLightbox.value = false
+  lightboxImageIndex.value = 0
+}
+
+const lightboxPrev = () => {
+  if (displayImages.value.length > 0) {
+    lightboxImageIndex.value = (lightboxImageIndex.value - 1 + displayImages.value.length) % displayImages.value.length
+  }
+}
+
+const lightboxNext = () => {
+  if (displayImages.value.length > 0) {
+    lightboxImageIndex.value = (lightboxImageIndex.value + 1) % displayImages.value.length
   }
 }
 
@@ -100,12 +124,20 @@ onMounted(() => fetchPackage())
         <div class="space-y-6">
           <!-- Main Image Viewer -->
           <div class="bg-light-card border border-light-border rounded-3xl overflow-hidden shadow-lg">
-            <div class="relative h-96 md:h-[500px]">
+            <div class="relative h-96 md:h-[500px] cursor-pointer" @click="openLightbox(selectedImageIndex)">
               <img
                 :src="displayImages[selectedImageIndex] || '/placeholder-image.jpg'"
                 :alt="packageData.name"
                 class="w-full h-full object-contain bg-primary-gray/10"
               />
+              <!-- Overlay indicator -->
+              <div class="absolute inset-0 bg-black/10 hover:bg-black/20 transition-colors duration-200 flex items-center justify-center opacity-0 hover:opacity-100">
+                <div class="bg-white/90 backdrop-blur rounded-full p-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                  </svg>
+                </div>
+              </div>
               
               <!-- Navigation Buttons -->
               <div v-if="displayImages.length > 1" class="absolute inset-0 flex items-center justify-between px-4">
@@ -130,15 +162,15 @@ onMounted(() => fetchPackage())
 
           <!-- Thumbnail Gallery -->
           <div v-if="displayImages.length > 1" class="grid grid-cols-4 md:grid-cols-6 gap-3">
-            <button
+            <div
               v-for="(img, index) in displayImages"
               :key="index"
-              @click="selectedImageIndex = index"
+              @click="openLightbox(index)"
               :class="selectedImageIndex === index ? 'ring-2 ring-primary-red' : 'opacity-70 hover:opacity-100'"
-              class="h-20 bg-light-card border border-light-border rounded-xl overflow-hidden transition-all duration-200"
+              class="h-20 bg-light-card border border-light-border rounded-xl overflow-hidden transition-all duration-200 cursor-pointer"
             >
               <img :src="img" class="w-full h-full object-cover" />
-            </button>
+            </div>
           </div>
         </div>
 
@@ -181,6 +213,79 @@ onMounted(() => fetchPackage())
           </div>
 
           
+         </div>
+       </div>
+     </div>
+
+    <!-- Lightbox Modal -->
+    <div 
+      v-if="showLightbox"
+      @click.self="closeLightbox"
+      class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+    >
+      <div class="relative max-w-5xl max-h-[90vh] w-full">
+        <!-- Close Button -->
+        <button
+          @click="closeLightbox"
+          class="absolute -top-12 right-0 text-white hover:text-primary-red transition-colors duration-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <!-- Image Container -->
+        <div class="bg-light-card rounded-2xl overflow-hidden">
+          <!-- Main Image -->
+          <div class="relative">
+            <img 
+              :src="displayImages[lightboxImageIndex] || '/placeholder-image.jpg'"
+              :alt="`${packageData?.name || 'Package'} - Image ${lightboxImageIndex + 1}`"
+              class="w-full max-h-[70vh] object-contain bg-primary-gray/10"
+            />
+            
+            <!-- Navigation Buttons -->
+            <button
+              v-if="displayImages.length > 1"
+              @click.stop="lightboxPrev"
+              class="absolute left-4 top-1/2 -translate-y-1/2 bg-light-card/80 hover:bg-light-card text-light-text rounded-full p-2 shadow-lg transition-all duration-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button
+              v-if="displayImages.length > 1"
+              @click.stop="lightboxNext"
+              class="absolute right-4 top-1/2 -translate-y-1/2 bg-light-card/80 hover:bg-light-card text-light-text rounded-full p-2 shadow-lg transition-all duration-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Image Info -->
+          <div class="p-6">
+            <h2 class="text-2xl font-black text-light-text mb-2">{{ packageData?.name || 'Package' }}</h2>
+            <p class="text-muted-text mb-4">
+              Image {{ lightboxImageIndex + 1 }} of {{ displayImages.length }}
+            </p>
+
+            <!-- Thumbnail Strip -->
+            <div v-if="displayImages.length > 1" class="flex gap-2 overflow-x-auto pt-2">
+              <div 
+                v-for="(imgUrl, index) in displayImages" 
+                :key="index"
+                @click="lightboxImageIndex = index"
+                :class="lightboxImageIndex === index ? 'ring-2 ring-primary-red' : 'opacity-60 hover:opacity-100'"
+                class="flex-shrink-0 cursor-pointer rounded overflow-hidden border-2 transition-all duration-200"
+              >
+                <img :src="imgUrl" class="h-16 w-24 object-cover" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
