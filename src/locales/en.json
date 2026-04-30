@@ -32,7 +32,7 @@
     "phone": "Phone Number",
     "origin": "Place of Origin",
     "package": "Interested Package",
-    "select_package": "Select a package (Optional)",
+    "select_package": "e.g. Umrah Ramadhan, Haji Furoda...",
     "submit": "Submit Guestbook",
     "submitting": "Submitting...",
     "success": "Thank you! Your information has been saved.",

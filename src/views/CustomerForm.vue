@@ -82,16 +82,12 @@ const submitForm = async () => {
 
         <div>
           <label class="block text-sm font-bold text-light-text mb-3 uppercase tracking-wide">{{ $t('guestbook.package') }}</label>
-          <select 
+          <input 
             v-model="interestedPackage"
-            class="w-full h-16 px-6 text-xl bg-light-bg rounded-2xl border-2 border-light-border focus:border-primary-red focus:ring-4 focus:ring-primary-red/20 outline-none transition-all appearance-none text-light-text"
-          >
-            <option value="" disabled selected>{{ $t('guestbook.select_package') }}</option>
-            <option value="Umrah Ramadhan 2026">Umrah Ramadhan 1447H</option>
-            <option value="Umrah Plus Turki">Umrah Plus Turki</option>
-            <option value="Haji Furoda">Haji Furoda</option>
-            <option value="Other">Other / Just Looking</option>
-          </select>
+            type="text" 
+            :placeholder="$t('guestbook.select_package')"
+            class="w-full h-16 px-6 text-xl rounded-2xl border-2 border-light-border focus:border-primary-red focus:ring-4 focus:ring-primary-red/20 outline-none transition-all bg-light-bg text-light-text"
+          />
         </div>
 
         <div v-if="message.text" :class="message.type === 'success' ? 'bg-green-100/20 text-green-600 border border-green-600/20' : 'bg-red-100/20 text-red-600 border border-red-600/20'" class="p-4 rounded-xl text-center font-bold">
