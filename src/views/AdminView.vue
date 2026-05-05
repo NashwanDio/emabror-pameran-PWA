@@ -849,7 +849,7 @@ onMounted(() => {
               <input v-model="newMedia.category" type="text" placeholder="Category (optional)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
               <textarea v-model="newMedia.description" placeholder="Description" rows="2" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
               <input v-model="newMedia.image_url" type="text" placeholder="Image URL" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
-              <input v-model="newMedia.thumbnail_url" type="text" placeholder="Thumbnail URL (optional)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
+               <input v-model="newMedia.thumbnail_url" type="text" placeholder="Thumbnail URL (optional)" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
               <select v-model="newMedia.type" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required>
                 <option value="">Select Type</option>
                 <option value="image">Image</option>
@@ -894,7 +894,7 @@ onMounted(() => {
               <input v-model="editingMedia.category" type="text" placeholder="Category" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
               <textarea v-model="editingMedia.description" placeholder="Description" rows="2" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text"></textarea>
               <input v-model="editingMedia.image_url" type="text" placeholder="Image URL" class="col-span-2 p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required />
-              <input v-model="editingMedia.thumbnail_url" type="text" placeholder="Thumbnail URL" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
+               <input v-model="editingMedia.thumbnail_url" type="text" placeholder="Thumbnail URL" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" />
               <select v-model="editingMedia.type" class="p-3 border border-light-border rounded-lg bg-light-bg text-light-text" required>
                 <option value="">Select Type</option>
                 <option value="image">Image</option>

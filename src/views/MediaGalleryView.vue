@@ -50,6 +50,16 @@ const filteredMedia = computed(() => {
   return items
 })
 
+function thumbnailUrl(item) {
+  const url = item.thumbnail_url || item.image_url
+  if (!url) return ''
+  const match = url.match(/\/file\/d\/([^/]+)\//)
+  if (match) {
+    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=s600`
+  }
+  return url
+}
+
 const openLightbox = (item) => {
   selectedMedia.value = item
 }
@@ -132,20 +142,19 @@ onMounted(() => fetchMedia())
         <div class="bg-light-card rounded-2xl overflow-hidden shadow-lg border border-light-border hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2">
           <!-- Thumbnail -->
           <div class="h-56 bg-primary-gray/10 relative overflow-hidden">
+            <img 
+              :src="thumbnailUrl(item)" 
+              :alt="item.title"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
             <!-- Video Indicator -->
-            <div v-if="selectedTab === 'videos'" class="absolute inset-0 flex items-center justify-center bg-black/30">
+            <div v-if="item.type === 'video'" class="absolute inset-0 flex items-center justify-center bg-black/30">
               <div class="bg-primary-red/90 rounded-full p-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
             </div>
-            <img 
-              v-else
-              :src="item.thumbnail_url || item.image_url" 
-              :alt="item.title"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
             <div v-if="item.category" class="absolute top-3 left-3 bg-light-card/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-light-text shadow-sm">
               {{ item.category }}
             </div>
@@ -197,19 +206,20 @@ onMounted(() => fetchMedia())
           <div class="relative">
             <!-- Image -->
             <img 
-              v-if="selectedTab === 'images' && selectedMedia.image_url"
+              v-if="selectedMedia.image_url && selectedMedia.type !== 'video'"
               :src="selectedMedia.image_url" 
               :alt="selectedMedia.title"
               class="w-full max-h-[70vh] object-contain bg-primary-gray/10"
             />
             <!-- Video -->
-            <video
-              v-else-if="selectedTab === 'videos' && selectedMedia.video_url || selectedMedia.image_url?.match(/\.(mp4|webm|ogg)$/i)"
-              :src="selectedMedia.video_url || selectedMedia.image_url"
-              controls
-              autoplay
-              class="w-full max-h-[70vh] object-contain bg-primary-gray/10"
-            ></video>
+            <iframe
+              v-else-if="selectedMedia.type === 'video' && selectedMedia.image_url"
+              :src="selectedMedia.image_url"
+              allow="autoplay; fullscreen"
+              allowfullscreen
+              class="w-full h-[70vh] bg-primary-gray/10"
+              style="border: none;"
+            ></iframe>
           </div>
 
           <!-- Media Info -->
